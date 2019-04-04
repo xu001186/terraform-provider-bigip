@@ -49,27 +49,29 @@ func resourceBigipAppSvscsCreate(d *schema.ResourceData, meta interface{}) error
 
 	name := d.Get("ident").(string)
 	label := d.Get("label").(string)
-	log.Printf("[INFO] Creating As3 app and value of d is  %s %s", name, d)
+	log.Printf("[INFO] Creating As3 app and value of d is  %s ", name)
 	if label == "Sample 1" {
 		p := dataToAppsvc01(name, d)
 		log.Printf(" value of p +++++++++++++++++++++++++++++++  %+v ", p)
 		err := client.CreateAppsvc01(&p)
-		time.Sleep(2 * time.Second)
+		time.Sleep(6 * time.Second)
 		if err != nil {
-			log.Printf("[ERROR] Unable to Create Appsvc  (%s) (%v) ", name, err)
-			return err
+			//log.Printf("[ERROR] Unable to Create Appsvc  (%s) (%v) ", name, err)
+			//return err
+			return fmt.Errorf("Error Unable to Create APPSVC %s: %v", name, err)
+
 		}
 	}
 
 	if label == "Sample 2" {
 		p := dataToAppsvc02(name, d)
 		log.Printf(" value of p +++++++++++++++++++++++++++++++  %+v ", p)
-		time.Sleep(2 * time.Second)
+		time.Sleep(5 * time.Second)
 		err := client.CreateAppsvc02(&p)
 		time.Sleep(2 * time.Second)
 		if err != nil {
-			log.Printf("[ERROR] Unable to Create Appsvcs02  (%s) (%v) ", name, err)
-			return err
+			return fmt.Errorf("Error Unable to Create APPSVC %s: %v", name, err)
+
 		}
 	}
 	d.SetId(name)
@@ -121,7 +123,7 @@ func resourceBigipAppSvscsExists(d *schema.ResourceData, meta interface{}) (bool
 		p, err := client.Appsvc01()
 		time.Sleep(4 * time.Second)
 		if err != nil {
-			log.Printf("[ERROR] Unable to Read Appsvc  (%s) (%v)", p, err)
+			log.Printf("[ERROR] Unable to Read Appsvc  %v (%v)", p, err)
 			return false, err
 		}
 	}
@@ -129,7 +131,7 @@ func resourceBigipAppSvscsExists(d *schema.ResourceData, meta interface{}) (bool
 		time.Sleep(4 * time.Second)
 		p, err := client.Appsvc02()
 		if err != nil {
-			log.Printf("[ERROR] Unable to Read Appsvc  (%s) (%v)", p, err)
+			log.Printf("[ERROR] Unable to Read Appsvc  (%v) (%v)", p, err)
 			return false, err
 		}
 	}
@@ -141,7 +143,7 @@ func resourceBigipAppSvscsUpdate(d *schema.ResourceData, meta interface{}) error
 
 	name := d.Get("ident").(string)
 	label := d.Get("label").(string)
-	log.Printf("[INFO] Modifying As3 app and value of d is  %s %s", name, d)
+	log.Printf("[INFO] Modifying As3 app and value of d is  %s %v", name, d)
 	if label == "Sample 1" {
 		p := dataToAppsvc01(name, d)
 		log.Printf(" value of p +++++++++++++++++++++++++++++++  %+v ", p)
@@ -178,7 +180,7 @@ func resourceBigipAppSvscsDelete(d *schema.ResourceData, meta interface{}) error
 		}
 	}
 	if label == "Sample 2" {
-		time.Sleep(4 * time.Second)
+		time.Sleep(10 * time.Second)
 		err := client.DeleteAppsvc02()
 		if err != nil {
 			log.Printf("[ERROR] Unable to Delete Appsvc  (%s) (%v)", name, err)
