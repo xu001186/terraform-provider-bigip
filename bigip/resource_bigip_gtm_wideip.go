@@ -176,6 +176,7 @@ func resourceBigipGtmWideipUpdate(d *schema.ResourceData, meta interface{}) erro
 	err := client.ModifyGTMWideIP(fullpath, gtmwideip, gtmtype)
 	if err != nil {
 		log.Printf("[ERROR] Unable to Modify WideIp   (%s) (%v) ", name, err)
+		resourceBigipGtmWideipRead(d, meta)
 		return err
 	}
 
