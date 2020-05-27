@@ -8,11 +8,12 @@ package bigip
 
 import (
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"reflect"
 	"regexp"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 const DEFAULT_PARTITION = "Common"
@@ -59,6 +60,9 @@ func Provider() terraform.ResourceProvider {
 			},
 		},
 
+		DataSourcesMap: map[string]*schema.Resource{
+			"bigip_ltm_node": bigipLtmNodeDataSource(),
+		},
 		ResourcesMap: map[string]*schema.Resource{
 			"bigip_cm_device":                       resourceBigipCmDevice(),
 			"bigip_cm_devicegroup":                  resourceBigipCmDevicegroup(),
@@ -217,4 +221,12 @@ func toSnakeCase(str string) string {
 	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
 	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
 	return strings.ToLower(snake)
+}
+
+func updateFieldToOptional(key string, m map[string]*schema.Schema) {
+	if _, ok := m[key]; ok {
+		m[key].Required = false
+		m[key].ForceNew = false
+		m[key].Optional = true
+	}
 }

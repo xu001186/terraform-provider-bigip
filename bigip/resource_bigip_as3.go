@@ -7,13 +7,14 @@ package bigip
 
 import (
 	"fmt"
+	"log"
+	"strings"
+	"sync"
+
 	"github.com/f5devcentral/go-bigip"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	"log"
-	"strings"
-	"sync"
 )
 
 var x = 0
